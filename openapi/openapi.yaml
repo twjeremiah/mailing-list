@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: Mailing List API
+  version: 1.0.0
+
+paths:
+  /contacts:
+    get:
+      summary: List contacts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contact'
+
+    post:
+      summary: Add a new contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewContact'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Bad request
+
+  /contacts/{id}:
+    delete:
+      summary: Delete contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+
+components:
+  schemas:
+    Contact:
+      type: object
+      required: [id, email_address, name, created_at]
+      properties:
+        id:
+          type: integer
+        email_address:
+          type: string
+          format: email
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    NewContact:
+      type: object
+      required: [email_address, name]
+      properties:
+        email_address:
+          type: string
+          format: email
+        name:
+          type: string
