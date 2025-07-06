@@ -22,7 +22,7 @@ class ContainerFactory
                 $connectionParameters = [
                     'driver'   => 'pdo_mysql',
                     'host'     => 'mysql',
-                    'dbname'   => 'test',
+                    'dbname'   => 'mailing-list',
                     'user'     => 'test',
                     'password' => 'test',
                 ];
