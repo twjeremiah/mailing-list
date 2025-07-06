@@ -4,6 +4,8 @@ namespace App\Infrastructure;
 
 use App\Boundary\Controller\ContactController;
 use App\Boundary\Controller\TestController;
+use App\Domain\ContactRepository;
+use App\Infrastructure\Repository\DatabaseContactRepository;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -31,7 +33,13 @@ class ContainerFactory
             },
 
             RouteMapper::class => autowire(),
+
+            // Controllers.
+            ContactController::class => autowire(),
             TestController::class => autowire(),
+
+            //Repositories
+            ContactRepository::class => \DI\autowire(DatabaseContactRepository::class),
         ]);
 
         return $builder->build();
