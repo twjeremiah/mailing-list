@@ -15,8 +15,9 @@ class ContactController
 
     public function create()
     {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        if ($data === null) {
+            $data = json_decode(file_get_contents('php://input'), true);
+        }
 
         if (
             !is_array($data) ||
@@ -24,6 +25,7 @@ class ContactController
             empty($data['name'])
         ) {
             JsonResponse::response(['error' => 'Invalid input'], 400);
+            return;
         }
 
         $email = filter_var($data['email_address'], FILTER_VALIDATE_EMAIL);
@@ -31,14 +33,17 @@ class ContactController
 
         if (!$email) {
             JsonResponse::response(['error' => 'Invalid email'], 400);
+            return;
         }
 
         if ($name === '') {
             JsonResponse::response(['error' => 'Invalid name'], 400);
+            return;
         }
 
         if ($this->repository->loadByEmail($email)) {
             JsonResponse::response(['error' => 'Duplicate email'], 409);
+            return;
         }
 
         $contact = $this->repository->create($email, $name);
@@ -58,11 +63,9 @@ class ContactController
 
         if ($deleted) {
             http_response_code(204);
-            exit;
+            JsonResponse::response([], 204);
         } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Contact not found']);
-            exit;
+            JsonResponse::response(['error' => 'Contact not found'], 404);
         }
     }
 }
