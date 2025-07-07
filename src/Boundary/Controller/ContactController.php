@@ -13,7 +13,7 @@ class ContactController
     {
     }
 
-    public function create()
+    public function create(?array $data = null)
     {
         if ($data === null) {
             $data = json_decode(file_get_contents('php://input'), true);
